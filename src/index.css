@@ -59,3 +59,9 @@ body {
 .shake {
   animation: shake 0.2s ease-in-out;
 }
+
+@keyframes bubblePop {
+  0% { transform: translateX(-50%) scale(0.6); opacity: 0; }
+  70% { transform: translateX(-50%) scale(1.08); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 1; }
+}

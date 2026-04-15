@@ -3,6 +3,22 @@ import { MoleState } from '../types/game';
 import ProfessorIcon from './ProfessorIcon';
 import BombIcon from './BombIcon';
 
+const PROF_MESSAGES = [
+  '아얏 교수를 때리다니!',
+  '자네 지금 뭐하는 건가!',
+  '이런다고 과제가 없어지지 않는다네!',
+  '그건 내 가발이야!',
+  '자꾸 그러면 대학원 추천 서류를 써주겠네!',
+  '벚꽃의 꽃말은 중간고사지!',
+];
+
+const BOMB_MESSAGES = [
+  '저는 학생인데요...?',
+  '챗지피티가 그거 맞다고 했어요',
+  '자료조사는 싫고, 발표는 못해요',
+  '잘못했어요 대학원만은 제발...!',
+];
+
 export type HoleSize = 'xs' | 'sm' | 'md' | 'lg' | 'desktop';
 
 interface MoleProps {
@@ -25,6 +41,7 @@ const HOLE_SIZES: Record<HoleSize, { hole: number; icon: number; height: number 
 export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSize = 'md' }: MoleProps) {
   const [showScore, setShowScore] = useState(false);
   const [scoreLabel, setScoreLabel] = useState('+100');
+  const [bubble, setBubble] = useState<string | null>(null);
   const { hole, icon, height } = HOLE_SIZES[holeSize];
 
   const isBomb = mole.moleType === 'bomb';
@@ -38,6 +55,12 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
       setScoreLabel(isBomb ? '-50' : '+100');
       setShowScore(true);
       setTimeout(() => setShowScore(false), 600);
+      if (Math.random() < 0.3) {
+        const msgs = isBomb ? BOMB_MESSAGES : PROF_MESSAGES;
+        const msg = msgs[Math.floor(Math.random() * msgs.length)];
+        setBubble(msg);
+        setTimeout(() => setBubble(null), 1800);
+      }
     } else {
       // 구멍 클릭했는데 두더지 없음 → 미스
       onMiss();
@@ -55,6 +78,37 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
         <div className="score-float absolute -top-3 left-1/2 font-black text-lg z-20 pointer-events-none"
           style={{ transform: 'translateX(-50%)', color: isBomb ? '#E74C3C' : '#2ECC71', textShadow: '0 2px 8px rgba(0,0,0,0.7)' }}>
           {scoreLabel}
+        </div>
+      )}
+
+      {/* 말풍선 */}
+      {bubble && (
+        <div className="absolute z-30 pointer-events-none"
+          style={{ bottom: height - 10, left: '50%', transform: 'translateX(-50%)', animation: 'bubblePop 0.2s ease-out' }}>
+          <div className="relative px-3 py-1.5 rounded-2xl text-xs font-bold whitespace-nowrap"
+            style={{
+              background: 'white',
+              color: '#1a1a2e',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
+              maxWidth: 180,
+              whiteSpace: 'normal',
+              textAlign: 'center',
+              lineHeight: 1.4,
+            }}>
+            {bubble}
+            {/* 말풍선 꼬리 */}
+            <div style={{
+              position: 'absolute',
+              bottom: -7,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '7px solid transparent',
+              borderRight: '7px solid transparent',
+              borderTop: '8px solid white',
+            }} />
+          </div>
         </div>
       )}
 
