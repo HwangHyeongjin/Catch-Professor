@@ -14,8 +14,8 @@ export const SCORE_HIT = 100;
 export const SCORE_PENALTY = -50; // 꽝 클릭 or 빈 곳 클릭
 
 export function getSpeedConfig(timeLeft: number): { visibleMs: number; spawnMs: number } {
-  if (timeLeft > 45) return { visibleMs: 1300, spawnMs: 950 };
-  if (timeLeft > 30) return { visibleMs: 1000, spawnMs: 720 };
-  if (timeLeft > 15) return { visibleMs: 740, spawnMs: 520 };
-  return { visibleMs: 480, spawnMs: 360 };
+  if (timeLeft > 45) return { visibleMs: 1600, spawnMs: 1200 };
+  if (timeLeft > 30) return { visibleMs: 1300, spawnMs: 950 };
+  if (timeLeft > 15) return { visibleMs: 1000, spawnMs: 720 };
+  return { visibleMs: 740, spawnMs: 520 };
 }

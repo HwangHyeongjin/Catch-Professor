@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { GAME_DURATION } from '../types/game';
+import { GAME_DURATION, getSpeedConfig } from '../types/game';
 import { useGameLogic } from '../hooks/useGameLogic';
 import MoleGrid from './MoleGrid';
 import CountdownModal from './CountdownModal';
@@ -43,6 +43,7 @@ export default function GameScreen({ prof1Name, prof2Name, onEnd, onHome }: Game
   if (phase === 'end') { onEnd(score); return null; }
 
   const timePercent = (timeLeft / GAME_DURATION) * 100;
+  const { visibleMs } = getSpeedConfig(timeLeft);
   const timeColor = timeLeft > 30 ? '#2ECC71' : timeLeft > 10 ? '#F39C12' : '#E74C3C';
   const isPaused = phase === 'paused';
 
@@ -138,7 +139,7 @@ export default function GameScreen({ prof1Name, prof2Name, onEnd, onHome }: Game
         >
           <MoleGrid
             moles={moles} prof1Name={prof1Name} prof2Name={prof2Name}
-            onHit={hitMole} onMiss={missMole} missShake={missShake} isDesktop={true}
+            onHit={hitMole} onMiss={missMole} missShake={missShake} isDesktop={true} visibleMs={visibleMs}
           />
         </div>
 
@@ -180,7 +181,7 @@ export default function GameScreen({ prof1Name, prof2Name, onEnd, onHome }: Game
 
       <div className="flex-1 flex items-center justify-center px-3" onClick={(e) => e.stopPropagation()}>
         <MoleGrid moles={moles} prof1Name={prof1Name} prof2Name={prof2Name}
-          onHit={hitMole} onMiss={missMole} missShake={missShake} isDesktop={false} />
+          onHit={hitMole} onMiss={missMole} missShake={missShake} isDesktop={false} visibleMs={visibleMs} />
       </div>
 
       <div className="text-center pb-4 text-xs pointer-events-none" style={{ color: 'rgba(255,255,255,0.22)' }}>

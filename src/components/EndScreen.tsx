@@ -115,8 +115,6 @@ export default function EndScreen({ score, prof1Name, prof2Name, playerName, sch
       <div className="flex items-center gap-5">
         <ProfessorIcon type="bald" size={isDesktop ? 80 : 64} />
         <div className="flex flex-col items-center gap-1">
-          <span className="text-xs font-bold px-3 py-0.5 rounded-full"
-            style={{ background: `${color}25`, color, border: `1px solid ${color}50` }}>{grade} 등급</span>
           <span className="text-5xl font-black" style={{ color }}>{score.toLocaleString()}</span>
           <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>점</span>
         </div>

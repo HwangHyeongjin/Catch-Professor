@@ -28,6 +28,7 @@ interface MoleProps {
   onHit: (id: number) => void;
   onMiss: () => void;
   holeSize?: HoleSize;
+  visibleMs?: number;
 }
 
 const HOLE_SIZES: Record<HoleSize, { hole: number; icon: number; height: number }> = {
@@ -38,7 +39,7 @@ const HOLE_SIZES: Record<HoleSize, { hole: number; icon: number; height: number 
   desktop: { hole: 100, icon: 76,  height: 122 }, // 4x4 화면 맞춤
 };
 
-export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSize = 'md' }: MoleProps) {
+export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSize = 'md', visibleMs = 1300 }: MoleProps) {
   const [showScore, setShowScore] = useState(false);
   const [scoreLabel, setScoreLabel] = useState('+100');
   const [bubble, setBubble] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
         const msgs = isBomb ? BOMB_MESSAGES : PROF_MESSAGES;
         const msg = msgs[Math.floor(Math.random() * msgs.length)];
         setBubble(msg);
-        setTimeout(() => setBubble(null), 1800);
+        setTimeout(() => setBubble(null), visibleMs);
       }
     } else {
       // 구멍 클릭했는데 두더지 없음 → 미스
@@ -85,14 +86,12 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
       {bubble && (
         <div className="absolute z-30 pointer-events-none"
           style={{ bottom: height - 10, left: '50%', transform: 'translateX(-50%)', animation: 'bubblePop 0.2s ease-out' }}>
-          <div className="relative px-3 py-1.5 rounded-2xl text-xs font-bold whitespace-nowrap"
+          <div className="relative px-3 py-1.5 rounded-2xl text-xs font-bold"
             style={{
               background: 'white',
               color: '#1a1a2e',
               boxShadow: '0 4px 16px rgba(0,0,0,0.35)',
-              maxWidth: 180,
-              whiteSpace: 'normal',
-              textAlign: 'center',
+              whiteSpace: 'nowrap',
               lineHeight: 1.4,
             }}>
             {bubble}

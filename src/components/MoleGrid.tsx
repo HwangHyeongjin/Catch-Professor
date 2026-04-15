@@ -9,9 +9,10 @@ interface MoleGridProps {
   onMiss: () => void;
   missShake: boolean;
   isDesktop?: boolean;
+  visibleMs?: number;
 }
 
-export default function MoleGrid({ moles, prof1Name, prof2Name, onHit, onMiss, missShake, isDesktop = false }: MoleGridProps) {
+export default function MoleGrid({ moles, prof1Name, prof2Name, onHit, onMiss, missShake, isDesktop = false, visibleMs = 1300 }: MoleGridProps) {
   return (
     <div
       className={`grid grid-cols-4 rounded-2xl ${missShake ? 'shake' : ''} ${isDesktop ? 'gap-5 p-6' : 'gap-2 p-3'}`}
@@ -26,6 +27,7 @@ export default function MoleGrid({ moles, prof1Name, prof2Name, onHit, onMiss, m
           onHit={onHit}
           onMiss={onMiss}
           holeSize={isDesktop ? 'desktop' : 'xs'}
+          visibleMs={visibleMs}
         />
       ))}
     </div>
