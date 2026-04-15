@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MoleState } from '../types/game';
 import ProfessorIcon from './ProfessorIcon';
 import BombIcon from './BombIcon';
@@ -49,21 +49,35 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
   const profType = mole.moleType === 'prof2' ? 'gray' : 'bald';
   const displayName = mole.moleType === 'prof2' ? prof2Name : prof1Name;
 
+  // 아이콘이 사라지면 말풍선도 즉시 제거
+  useEffect(() => {
+    if (!mole.isVisible) setBubble(null);
+  }, [mole.isVisible]);
+
+  const doHit = () => {
+    onHit(mole.id);
+    setScoreLabel(isBomb ? '-50' : '+100');
+    setShowScore(true);
+    setTimeout(() => setShowScore(false), 600);
+    if (Math.random() < 0.3) {
+      const msgs = isBomb ? BOMB_MESSAGES : PROF_MESSAGES;
+      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      setBubble(msg);
+    }
+  };
+
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 항상 버블링 차단 (빈 곳 클릭과 중복 방지)
+    e.stopPropagation();
+    if (mole.isVisible && !mole.isHit) doHit();
+    else onMiss();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.stopPropagation();
     if (mole.isVisible && !mole.isHit) {
-      onHit(mole.id);
-      setScoreLabel(isBomb ? '-50' : '+100');
-      setShowScore(true);
-      setTimeout(() => setShowScore(false), 600);
-      if (Math.random() < 0.3) {
-        const msgs = isBomb ? BOMB_MESSAGES : PROF_MESSAGES;
-        const msg = msgs[Math.floor(Math.random() * msgs.length)];
-        setBubble(msg);
-        setTimeout(() => setBubble(null), visibleMs);
-      }
+      e.preventDefault(); // 클릭 이벤트 중복 방지
+      doHit();
     } else {
-      // 구멍 클릭했는데 두더지 없음 → 미스
       onMiss();
     }
   };
@@ -73,6 +87,7 @@ export default function Mole({ mole, prof1Name, prof2Name, onHit, onMiss, holeSi
       className="relative flex flex-col items-center justify-end cursor-pointer select-none"
       style={{ height }}
       onClick={handleClick}
+      onTouchStart={handleTouchStart}
     >
       {/* 점수 플로팅 */}
       {showScore && (
