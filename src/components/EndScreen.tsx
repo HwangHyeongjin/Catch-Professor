@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProfessorIcon from './ProfessorIcon';
-import { saveScore, getSchoolTopScores, getGlobalTopScores, ScoreEntry } from '../lib/ranking';
+import { saveScore, updateScore, getSchoolTopScores, getGlobalTopScores, ScoreEntry } from '../lib/ranking';
 
 interface EndScreenProps {
   score: number;
@@ -8,6 +8,8 @@ interface EndScreenProps {
   prof2Name: string;
   playerName: string;
   school: string;
+  scoreId: number | null;
+  onScoreSaved: (id: number) => void;
   onRestart: () => void;
   onHome: () => void;
 }
@@ -71,7 +73,7 @@ function useIsDesktop() {
   return v;
 }
 
-export default function EndScreen({ score, prof1Name, prof2Name, playerName, school, onRestart, onHome }: EndScreenProps) {
+export default function EndScreen({ score, prof1Name, prof2Name, playerName, school, scoreId, onScoreSaved, onRestart, onHome }: EndScreenProps) {
   const isDesktop = useIsDesktop();
   const { grade, color, message } = getGrade(score);
   const [tab, setTab] = useState<'school' | 'global'>('school');
@@ -87,7 +89,12 @@ export default function EndScreen({ score, prof1Name, prof2Name, playerName, sch
     let cancelled = false;
     async function run() {
       try {
-        await saveScore({ school, playerName, profNames, score });
+        if (scoreId !== null) {
+          await updateScore(scoreId, score);
+        } else {
+          const newId = await saveScore({ school, playerName, profNames, score });
+          onScoreSaved(newId);
+        }
         const [schoolData, globalData] = await Promise.all([
           getSchoolTopScores(school, 10),
           getGlobalTopScores(10),

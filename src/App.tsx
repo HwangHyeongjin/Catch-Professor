@@ -17,10 +17,12 @@ export default function App() {
   const [player, setPlayer] = useState<PlayerInfo>({ prof1: '', prof2: '', playerName: '', school: '' });
   const [finalScore, setFinalScore] = useState(0);
   const [gameKey, setGameKey] = useState(0);
+  const [scoreId, setScoreId] = useState<number | null>(null);
 
   const handleStart = (data: PlayerInfo) => {
     setPlayer(data);
     setGameKey((k) => k + 1);
+    setScoreId(null);
     setScreen('game');
   };
 
@@ -46,7 +48,8 @@ export default function App() {
         <EndScreen score={finalScore}
           prof1Name={player.prof1} prof2Name={player.prof2}
           playerName={player.playerName} school={player.school}
-          onRestart={handleRestart} onHome={() => setScreen('start')} />
+          scoreId={scoreId} onScoreSaved={setScoreId}
+          onRestart={handleRestart} onHome={() => { setScoreId(null); setScreen('start'); }} />
       )}
     </div>
   );
