@@ -122,7 +122,7 @@ export default function EndScreen({ score, prof1Name, prof2Name, playerName, sch
       <div className="flex items-center gap-5">
         <ProfessorIcon type="bald" size={isDesktop ? 80 : 64} />
         <div className="flex flex-col items-center gap-1">
-          <span className="text-5xl font-black" style={{ color }}>{score.toLocaleString()}<span className="text-2xl ml-1" style={{ color: 'rgba(255,255,255,0.5)' }}>점</span></span>
+          <span className="font-black whitespace-nowrap" style={{ color, fontSize: score >= 10000 ? '2.8rem' : '3rem' }}>{score.toLocaleString()}<span className="ml-1" style={{ fontSize: '1.3rem', color: 'rgba(255,255,255,0.5)' }}>점</span></span>
         </div>
         <ProfessorIcon type="gray" size={isDesktop ? 80 : 64} />
       </div>
